@@ -17,8 +17,10 @@ class Species:
     def add_or_update_residue(self, residue_id, residue_name=None, residue_state=None):
         for residue in self.residues:
             if residue.id == residue_id:
-                residue.name = residue_name
-                residue.state = residue_state
+                if residue_name is not None:
+                    residue.name = residue_name
+                if residue_state is not None:
+                    residue.state = residue_state
                 return
 
         residue = Residue(residue_id, residue_name, residue_state)
