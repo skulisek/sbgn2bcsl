@@ -16,7 +16,6 @@ class CellDesignerParser:
         self.species_dict = dict()
         self.residues_dict = dict()
         self.compartments_dict = dict()
-        self.parse_tree()
 
     def parse_reaction(self, reaction_node):
         reactants = []
