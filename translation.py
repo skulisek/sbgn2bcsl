@@ -76,11 +76,27 @@ class Translator:
                 self.unpack_complexes = False
                 self.generate_warnings = False
 
-                composition = []
-                for child in species.composition:
-                    tmp_child = self.sbgn_species_to_bcsl_agent(child)
-                    if tmp_child is not None:
-                        composition.append(tmp_child)
+                composition = self.list_sbgn_to_list_bcsl(species.composition)
+
+                self.unpack_complexes = tmp_unpack
+                self.generate_warnings = tmp_generate
+
+                out_agent = bcsl_structures.ComplexAgent(name, s_id, compartment, composition)
+                return out_agent
+
+            # Recursively unpack all the children
+            if self.unpack_complexes and self.unpack_nested_complexes:
+                if self.generate_warnings:
+                    warning = "Recursively unpacking Complex Species \"{0}\" leads to a loss of information about" \
+                              " internal structure of the Complex".format(name)
+                    logging.warning(warning)
+
+                tmp_unpack = self.unpack_complexes
+                tmp_generate = self.generate_warnings
+                self.unpack_complexes = True
+                self.generate_warnings = False
+
+                composition = self.list_sbgn_to_list_bcsl(species.composition)
 
                 self.unpack_complexes = tmp_unpack
                 self.generate_warnings = tmp_generate
@@ -93,16 +109,16 @@ class Translator:
         return out_agent
 
     def sbgn_transition_to_bcsl_rule(self, transition):
-        reactants = []
-        products = []
-        for reactant in transition.reactants:
-            tmp_reactant = self.sbgn_species_to_bcsl_agent(reactant)
-            if tmp_reactant is not None:
-                reactants.append(tmp_reactant)
-        for product in transition.products:
-            tmp_product = self.sbgn_species_to_bcsl_agent(product)
-            if tmp_product is not None:
-                products.append(tmp_product)
-
+        reactants = self.list_sbgn_to_list_bcsl(transition.reactants)
+        products = self.list_sbgn_to_list_bcsl(transition.products)
         rule = bcsl_structures.Rule(transition.id, reactants, products)
         return rule
+
+    def list_sbgn_to_list_bcsl(self, sbgn_list):
+        agents = []
+        for species in sbgn_list:
+            tmp_agent = self.sbgn_species_to_bcsl_agent(species)
+            if tmp_agent is not None:
+                agents.append(tmp_agent)
+
+        return agents
