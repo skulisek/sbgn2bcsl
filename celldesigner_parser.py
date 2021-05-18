@@ -103,10 +103,19 @@ class CellDesignerParser:
 
     def parse_compartment(self, compartment_node):
         attributes = compartment_node.attrib
-        # Name attribute does not have to be present, using "default" instead
-        self.compartments_dict[attributes["id"]] = attributes.get("name", "default")
+        # Name attribute does not have to be present, using "default" for the first, and ID instead
+        default_value = attributes["id"]
+        if "default" not in self.compartments_dict.values():
+            default_value = "default"
+        self.compartments_dict[attributes["id"]] = attributes.get("name", default_value)
 
     def parse_tree(self):
+        # Clear out all stored values
+        self.process_list = []
+        self.species_dict = dict()
+        self.residues_dict = dict()
+        self.compartments_dict = dict()
+
         tree = ET.parse(self.filename)
 
         # Find all compartments, species, and reactions nodes.
