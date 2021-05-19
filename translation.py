@@ -21,7 +21,7 @@ class Translator:
     generate_warnings = True
 
     to_atomic = ["ION", "SIMPLE_MOLECULE"]
-    to_structure = ["DRUG", "UNKNOWN", "RNA", "DNA", "GENE", "PROTEIN"]
+    to_structure = ["DRUG", "UNKNOWN", "RNA", "ANTISENSE_RNA", "GENE", "PROTEIN"]
     to_complex = ["COMPLEX"]
     to_ignore = ["DEGRADED"]
 
