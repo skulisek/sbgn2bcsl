@@ -65,7 +65,7 @@ class Translator:
 
             # when unpacking complexes, we convert into BCSL Complex Agent
             #   but children must be BCSL Structure Agents
-            if not self.unpack_nested_complexes:
+            if self.unpack_complexes and not self.unpack_nested_complexes:
                 if self.generate_warnings:
                     warning = "Turning children of Complex Species \"{0}\" into Structure Agents" \
                               " with empty structure leads to a loss of information".format(name)
@@ -91,14 +91,11 @@ class Translator:
                               " internal structure of the Complex".format(name)
                     logging.warning(warning)
 
-                tmp_unpack = self.unpack_complexes
                 tmp_generate = self.generate_warnings
-                self.unpack_complexes = True
                 self.generate_warnings = False
 
                 composition = self.list_sbgn_to_list_bcsl(species.composition)
 
-                self.unpack_complexes = tmp_unpack
                 self.generate_warnings = tmp_generate
 
                 out_agent = bcsl_structures.ComplexAgent(name, s_id, compartment, composition)
