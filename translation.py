@@ -3,7 +3,7 @@ import logging
 import bcsl_structures
 
 
-def sbgn_residue_to_bcs_atomic_agent(residue):
+def sbgn_residue_to_bcsl_atomic_agent(residue):
     name = residue.name
     r_id = residue.id
     state = residue.state
@@ -41,7 +41,7 @@ class Translator:
         if s_type in self.to_structure:
             structure = []
             for residue in species.residues:
-                tmp_residue = sbgn_residue_to_bcs_atomic_agent(residue)
+                tmp_residue = sbgn_residue_to_bcsl_atomic_agent(residue)
                 structure.append(tmp_residue)
 
             out_agent = bcsl_structures.StructureAgent(name, s_id, compartment, structure)
