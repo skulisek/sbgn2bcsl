@@ -20,24 +20,30 @@ class CellDesignerParser:
     def parse_reaction(self, reaction_node):
         reactants = []
         products = []
+        positive_influences = []
 
         attributes = reaction_node.attrib
         id_attribute = attributes["id"]
 
-        base_reactant_nodes = reaction_node.findall(".//{}baseReactant".format(self.xml_namespace_celldesigner))
-        for base_reactant_node in base_reactant_nodes:
-            base_reactant_species = self.species_dict[base_reactant_node.attrib["species"]]
-            reactants.append(base_reactant_species)
-
-        base_product_nodes = reaction_node.findall(".//{}baseProduct".format(self.xml_namespace_celldesigner))
-        for base_product_node in base_product_nodes:
-            base_product_species = self.species_dict[base_product_node.attrib["species"]]
-            products.append(base_product_species)
+        base_reactant_nodes = reaction_node.findall(".//{0}baseReactant".format(self.xml_namespace_celldesigner))
+        base_product_nodes = reaction_node.findall(".//{0}baseProduct".format(self.xml_namespace_celldesigner))
 
         reactant_links_nodes = reaction_node.findall(".//{0}listOfReactantLinks/{0}reactantLink"
                                                      .format(self.xml_namespace_celldesigner))
         product_links_nodes = reaction_node.findall(".//{0}listOfProductLinks/{0}productLink"
                                                     .format(self.xml_namespace_celldesigner))
+
+        modification_nodes = reaction_node.findall(".//{0}listOfModification/{0}modification"
+                                                   .format(self.xml_namespace_celldesigner))
+
+        for base_reactant_node in base_reactant_nodes:
+            base_reactant_species = self.species_dict[base_reactant_node.attrib["species"]]
+            reactants.append(base_reactant_species)
+
+        for base_product_node in base_product_nodes:
+            base_product_species = self.species_dict[base_product_node.attrib["species"]]
+            products.append(base_product_species)
+
         for reactant_node in reactant_links_nodes:
             reactant_species = self.species_dict[reactant_node.attrib["reactant"]]
             reactants.append(reactant_species)
@@ -46,11 +52,15 @@ class CellDesignerParser:
             product_species = self.species_dict[product_node.attrib["product"]]
             products.append(product_species)
 
-        process = sbgn_structures.Transition(id_attribute)
-        for reactant in reactants:
-            process.add_reactant(reactant)
-        for product in products:
-            process.add_product(product)
+        positive_influence_types = ['CATALYSIS']
+        for modification_node in modification_nodes:
+            mod_attributes = modification_node.attrib
+            modifier_id = mod_attributes.get('modifiers')
+            modifier_type = mod_attributes.get('type')
+            if modifier_type in positive_influence_types:
+                positive_influences.append(self.species_dict[modifier_id])
+
+        process = sbgn_structures.Transition(id_attribute, reactants, products)
 
         self.process_list.append(process)
 
