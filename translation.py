@@ -11,7 +11,7 @@ class Translator:
 
     include_positive_influences = False
 
-    replace_spaces = True
+    replace_spaces = False
     space_char = '_'
 
     to_atomic = ["ION", "SIMPLE_MOLECULE"]
@@ -27,6 +27,8 @@ class Translator:
 
         if self.replace_spaces:
             name = name.replace(' ', self.space_char)
+            if compartment is not None:
+                compartment = compartment.replace(' ', self.space_char)
 
         if s_type in self.to_ignore:
             return None
