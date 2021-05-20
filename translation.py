@@ -3,22 +3,16 @@ import logging
 import bcsl_structures
 
 
-def sbgn_residue_to_bcsl_atomic_agent(residue):
-    name = residue.name
-    r_id = residue.id
-    state = residue.state
-
-    if name is None:
-        name = r_id
-
-    agent = bcsl_structures.AtomicAgent(name, r_id, None, state)
-    return agent
-
-
 class Translator:
+    generate_warnings = True
+
     unpack_complexes = True
     unpack_nested_complexes = False
-    generate_warnings = True
+
+    include_positive_influences = False
+
+    replace_spaces = True
+    space_char = '_'
 
     to_atomic = ["ION", "SIMPLE_MOLECULE"]
     to_structure = ["DRUG", "UNKNOWN", "RNA", "ANTISENSE_RNA", "GENE", "PROTEIN"]
@@ -31,6 +25,9 @@ class Translator:
         s_type = species.type
         compartment = species.compartment
 
+        if self.replace_spaces:
+            name = name.replace(' ', self.space_char)
+
         if s_type in self.to_ignore:
             return None
 
@@ -41,7 +38,7 @@ class Translator:
         if s_type in self.to_structure:
             structure = []
             for residue in species.residues:
-                tmp_residue = sbgn_residue_to_bcsl_atomic_agent(residue)
+                tmp_residue = self.sbgn_residue_to_bcsl_atomic_agent(residue)
                 structure.append(tmp_residue)
 
             out_agent = bcsl_structures.StructureAgent(name, s_id, compartment, structure)
@@ -108,6 +105,13 @@ class Translator:
     def sbgn_transition_to_bcsl_rule(self, transition):
         reactants = self.list_sbgn_to_list_bcsl(transition.reactants)
         products = self.list_sbgn_to_list_bcsl(transition.products)
+
+        if self.include_positive_influences:
+            agent_modifiers = self.list_sbgn_to_list_bcsl(transition.modifiers)
+            for modifier in agent_modifiers:
+                reactants.append(modifier)
+                products.append(modifier)
+
         rule = bcsl_structures.Rule(transition.id, reactants, products)
         return rule
 
@@ -119,3 +123,17 @@ class Translator:
                 agents.append(tmp_agent)
 
         return agents
+
+    def sbgn_residue_to_bcsl_atomic_agent(self, residue):
+        name = residue.name
+        r_id = residue.id
+        state = residue.state
+
+        if name is None:
+            name = r_id
+
+        if self.replace_spaces:
+            name = name.replace(' ', self.space_char)
+
+        agent = bcsl_structures.AtomicAgent(name, r_id, None, state)
+        return agent
