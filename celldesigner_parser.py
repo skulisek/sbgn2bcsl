@@ -60,7 +60,7 @@ class CellDesignerParser:
             if modifier_type in positive_influence_types:
                 positive_influences.append(self.species_dict[modifier_id])
 
-        process = sbgn_structures.Transition(id_attribute, reactants, products)
+        process = sbgn_structures.Transition(id_attribute, reactants, products, positive_influences)
 
         self.process_list.append(process)
 
