@@ -31,17 +31,23 @@ class Species:
 
 
 class Transition:
-    def __init__(self, new_id, reactants=None, products=None):
+    def __init__(self, new_id, reactants=None, products=None, modifiers=None):
         if reactants is None:
             reactants = []
         if products is None:
             products = []
+        if modifiers is None:
+            modifiers = []
         self.id = new_id
         self.reactants = reactants
         self.products = products
+        self.modifiers = modifiers
 
     def add_reactant(self, reactant):
         self.reactants.append(reactant)
 
     def add_product(self, product):
         self.products.append(product)
+
+    def add_modifier(self, modifier):
+        self.modifiers.append(modifier)
