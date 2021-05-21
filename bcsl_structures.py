@@ -53,8 +53,6 @@ class Rule:
 
     def __str__(self, include_modifiers=False, include_artificial_rates=False):
         base_string = "{0}::{1}"
-        if include_artificial_rates:
-            base_string = "1 {0}::{1}"
 
         reactants_str = " + ".join(map(lambda s: base_string.format(s.__str__(), s.compartment), self.reactants))
         products_str = " + ".join(map(lambda s: base_string.format(s.__str__(), s.compartment), self.products))
@@ -65,4 +63,6 @@ class Rule:
             products_str += " + {0}".format(modifiers_str)
 
         out_str = "{0} => {1}".format(reactants_str, products_str)
+        if include_artificial_rates:
+            out_str += " @ 1"
         return out_str
