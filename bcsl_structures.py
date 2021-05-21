@@ -7,7 +7,7 @@ class AtomicAgent:
 
     def __str__(self):
         if not self.state:
-            out_str = "{0}{{}}".format(self.name)
+            out_str = "{0}{{_}}".format(self.name)
             return out_str
         out_str = "{0}{{{1}}}".format(self.name, self.state)
         return out_str
