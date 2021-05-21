@@ -64,5 +64,5 @@ class Rule:
             reactants_str += " + {0}".format(modifiers_str)
             products_str += " + {0}".format(modifiers_str)
 
-        out_str = "{0} -> {1}".format(reactants_str, products_str)
+        out_str = "{0} => {1}".format(reactants_str, products_str)
         return out_str
