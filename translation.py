@@ -25,9 +25,9 @@ class Translator:
         compartment = species.compartment
 
         if self.replace_spaces:
-            name = re.sub(r'\W+', '', name)
+            name = re.sub(r'\W+', '_', name)
             if compartment is not None:
-                compartment = re.sub(r'\W+', '', compartment)
+                compartment = re.sub(r'\W+', '_', compartment)
 
         if s_type in self.to_ignore:
             return None
