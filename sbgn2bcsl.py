@@ -31,7 +31,7 @@ arg_parser.add_argument('-i',
                         action='store_true',
                         help='Include positive influences on both sides of the rule.')
 arg_parser.add_argument('-w',
-                        '--replace-spaces',
+                        '--replace-non-word-chars',
                         action='store_true',
                         help='Replace whitespaces in names with an underscore.')
 arg_parser.add_argument('-r',
@@ -46,7 +46,7 @@ unpack_complexes = args.unpack_complexes
 unpack_nested = args.unpack_nested_complexes
 include_influences = args.include_positive_influences
 quiet = args.quiet
-replace_spaces = args.replace_spaces
+replace_spaces = args.replace_non_word_chars
 include_rates = args.rates
 
 if unpack_nested:

@@ -1,6 +1,7 @@
 import sbgn_structures
 import logging
 import bcsl_structures
+import re
 
 
 class Translator:
@@ -24,9 +25,9 @@ class Translator:
         compartment = species.compartment
 
         if self.replace_spaces:
-            name = name.replace(' ', self.space_char)
+            name = re.sub(r'\W+', '', name)
             if compartment is not None:
-                compartment = compartment.replace(' ', self.space_char)
+                compartment = re.sub(r'\W+', '', compartment)
 
         if s_type in self.to_ignore:
             return None
@@ -128,7 +129,7 @@ class Translator:
             name = r_id
 
         if self.replace_spaces:
-            name = name.replace(' ', self.space_char)
+            name = name = re.sub(r'\W+', '', name)
 
         agent = bcsl_structures.AtomicAgent(name, r_id, None, state)
         return agent
