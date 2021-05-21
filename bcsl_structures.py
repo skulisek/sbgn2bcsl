@@ -59,8 +59,14 @@ class Rule:
         modifiers_str = " + ".join(map(lambda s: base_string.format(s.__str__(), s.compartment), self.modifiers))
 
         if include_modifiers and self.modifiers:
-            reactants_str += " + {0}".format(modifiers_str)
-            products_str += " + {0}".format(modifiers_str)
+            if self.reactants:
+                reactants_str += " + {0}".format(modifiers_str)
+            else:
+                reactants_str = modifiers_str
+            if self.products:
+                products_str += " + {0}".format(modifiers_str)
+            else:
+                products_str = modifiers_str
 
         out_str = "{0} => {1}".format(reactants_str, products_str)
         if include_artificial_rates:
