@@ -9,8 +9,6 @@ class Translator:
     unpack_complexes = True
     unpack_nested_complexes = False
 
-    include_positive_influences = False
-
     replace_spaces = False
     space_char = '_'
 
@@ -107,14 +105,9 @@ class Translator:
     def sbgn_transition_to_bcsl_rule(self, transition):
         reactants = self.list_sbgn_to_list_bcsl(transition.reactants)
         products = self.list_sbgn_to_list_bcsl(transition.products)
+        modifiers = self.list_sbgn_to_list_bcsl(transition.modifiers)
 
-        if self.include_positive_influences:
-            agent_modifiers = self.list_sbgn_to_list_bcsl(transition.modifiers)
-            for modifier in agent_modifiers:
-                reactants.append(modifier)
-                products.append(modifier)
-
-        rule = bcsl_structures.Rule(transition.id, reactants, products)
+        rule = bcsl_structures.Rule(transition.id, reactants, products, modifiers)
         return rule
 
     def list_sbgn_to_list_bcsl(self, sbgn_list):

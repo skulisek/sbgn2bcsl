@@ -34,6 +34,10 @@ arg_parser.add_argument('-w',
                         '--replace-spaces',
                         action='store_true',
                         help='Replace whitespaces in names with an underscore.')
+arg_parser.add_argument('-r',
+                        '--rates',
+                        action='store_true',
+                        help='Include artificial rates to the output rules.')
 
 args = arg_parser.parse_args()
 input_path = args.Path
@@ -43,6 +47,7 @@ unpack_nested = args.unpack_nested_complexes
 include_influences = args.include_positive_influences
 quiet = args.quiet
 replace_spaces = args.replace_spaces
+include_rates = args.rates
 
 if unpack_nested:
     unpack_complexes = True
@@ -55,7 +60,6 @@ tsr = Translator()
 tsr.unpack_complexes = unpack_complexes
 tsr.unpack_nested_complexes = unpack_nested
 tsr.generate_warnings = not quiet
-tsr.include_positive_influences = include_influences
 tsr.replace_spaces = replace_spaces
 
 rules_list = []
@@ -65,6 +69,6 @@ for process in cp.process_list:
 
 out_file = open(output_path, "w")
 for rule in rules_list:
-    out_file.write(rule.__str__())
+    out_file.write(rule.__str__(include_modifiers=include_influences, include_artificial_rates=include_rates))
     out_file.write('\n')
 out_file.close()
