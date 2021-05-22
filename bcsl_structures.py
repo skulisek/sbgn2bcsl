@@ -45,11 +45,12 @@ class ComplexAgent:
 
 
 class Rule:
-    def __init__(self, new_id, reactants=None, products=None, modifiers=None):
+    def __init__(self, new_id, reversible=False, reactants=None, products=None, modifiers=None):
         self.id = new_id
         self.reactants = reactants
         self.products = products
         self.modifiers = modifiers
+        self.reversible = reversible
 
     def __str__(self, include_modifiers=False, include_artificial_rates=False):
         base_string = "{0}::{1}"
@@ -69,6 +70,13 @@ class Rule:
                 products_str = modifiers_str
 
         out_str = "{0} => {1}".format(reactants_str, products_str)
+        out_str_second = "{1} => {0}".format(reactants_str, products_str)
+
         if include_artificial_rates:
             out_str += " @ 1"
-        return out_str
+            out_str_second += " @ 1"
+
+        if not self.reversible:
+            return out_str
+
+        return out_str + "\n" + out_str_second

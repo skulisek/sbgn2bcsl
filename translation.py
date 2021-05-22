@@ -107,8 +107,9 @@ class Translator:
         reactants = self.list_sbgn_to_list_bcsl(transition.reactants)
         products = self.list_sbgn_to_list_bcsl(transition.products)
         modifiers = self.list_sbgn_to_list_bcsl(transition.modifiers)
+        reversible = transition.reversible
 
-        rule = bcsl_structures.Rule(transition.id, reactants, products, modifiers)
+        rule = bcsl_structures.Rule(transition.id, reversible, reactants, products, modifiers)
         return rule
 
     def list_sbgn_to_list_bcsl(self, sbgn_list):

@@ -31,7 +31,7 @@ class Species:
 
 
 class Transition:
-    def __init__(self, new_id, reactants=None, products=None, modifiers=None):
+    def __init__(self, new_id, reversible=False, reactants=None, products=None, modifiers=None):
         if reactants is None:
             reactants = []
         if products is None:
@@ -42,6 +42,7 @@ class Transition:
         self.reactants = reactants
         self.products = products
         self.modifiers = modifiers
+        self.reversible = reversible
 
     def add_reactant(self, reactant):
         self.reactants.append(reactant)

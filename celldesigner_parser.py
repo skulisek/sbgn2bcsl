@@ -20,10 +20,14 @@ class CellDesignerParser:
     def parse_reaction(self, reaction_node):
         reactants = []
         products = []
-        positive_influences = []
+        influences = []
 
         attributes = reaction_node.attrib
         id_attribute = attributes["id"]
+
+        # If the reversible attribute is not defined, we default to true
+        reversible_attribute = attributes.get("reversible", "true")
+        reversible_bool = reversible_attribute.lower() == "true"
 
         base_reactant_nodes = reaction_node.findall(".//{0}baseReactant".format(self.xml_namespace_celldesigner))
         base_product_nodes = reaction_node.findall(".//{0}baseProduct".format(self.xml_namespace_celldesigner))
@@ -58,9 +62,9 @@ class CellDesignerParser:
             modifier_id = mod_attributes.get('modifiers')
             modifier_type = mod_attributes.get('type')
             if modifier_type in positive_influence_types:
-                positive_influences.append(self.species_dict[modifier_id])
+                influences.append(self.species_dict[modifier_id])
 
-        process = sbgn_structures.Transition(id_attribute, reactants, products, positive_influences)
+        process = sbgn_structures.Transition(id_attribute, reversible_bool, reactants, products, influences)
 
         self.process_list.append(process)
 
