@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 
 arg_parser = ArgumentParser(prog='sbgn2bcsl',
                             description='Tool for converting CellDesigner 4.4.2 diagrams to BCSL',
-                            usage='%(prog)s path [options]')
+                            usage='%(prog)s path out_path [options]')
 
 arg_parser.add_argument('Path',
                         metavar='path',
